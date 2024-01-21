@@ -1,0 +1,15 @@
+.anchorpane-background-color {
+    -fx-background-color: rgba(250, 233, 211, 0.9); /* Pearl blush color */
+}
+.background-image-textarea {
+    -fx-background-image: url("../images/chatBackground.jpg"); /* Change "background.jpg" to your image path */
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.anchor-pane-with-background {
+    -fx-background-image: url("../images/background_03.png"); /* Reference to the image in the resources directory */
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
