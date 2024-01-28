@@ -13,3 +13,6 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
+.background-vbox {
+    -fx-background-color: #f6f3fd; /* Set your desired background color */
+}

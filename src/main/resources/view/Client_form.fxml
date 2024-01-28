@@ -10,30 +10,35 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="559.0" prefWidth="909.0" styleClass="anchor-pane-with-background" stylesheets="@../style/Client.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.controller.ClientFormController">
+<AnchorPane prefHeight="559.0" prefWidth="955.0" styleClass="anchor-pane-with-background" stylesheets="@../style/Client.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.controller.ClientFormController">
    <children>
-      <AnchorPane prefHeight="58.0" prefWidth="909.0" style="-fx-background-color: white;" styleClass="anchorpane-background-color" stylesheets="@../style/Client.css">
+      <AnchorPane prefHeight="58.0" prefWidth="955.0" style="-fx-background-color: white;" styleClass="anchorpane-background-color" stylesheets="@../style/Client.css">
          <children>
-            <Label fx:id="lblName" layoutX="22.0" layoutY="14.0" prefHeight="38.0" prefWidth="485.0" text="Chat Room" textFill="#753ec3">
+            <Label fx:id="lblName" layoutX="86.0" layoutY="14.0" prefHeight="38.0" prefWidth="421.0" text="Chat Room" textFill="#753ec3">
                <font>
-                  <Font name="DejaVu Sans Bold" size="27.0" />
+                  <Font name="Abyssinica SIL" size="27.0" />
                </font>
             </Label>
-            <ImageView fx:id="imgExit" fitHeight="45.0" fitWidth="56.0" layoutX="819.0" layoutY="11.0" onMouseClicked="#imgExitOnAction" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgExit" fitHeight="45.0" fitWidth="56.0" layoutX="874.0" layoutY="11.0" onMouseClicked="#imgExitOnAction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/icons8-close-100.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="imgMinimize" fitHeight="38.0" fitWidth="45.0" layoutX="760.0" layoutY="15.0" onMouseClicked="#imgMinimizeOnAction" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imgMinimize" fitHeight="38.0" fitWidth="45.0" layoutX="823.0" layoutY="15.0" onMouseClicked="#imgMinimizeOnAction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/icons8-minimize-window-64.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="imgUpload1" fitHeight="38.0" fitWidth="53.0" layoutX="33.0" layoutY="15.0" onMouseClicked="#imgUploadOnAction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/icons8-user.gif" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
-      <ScrollPane layoutX="39.0" layoutY="87.0" prefHeight="367.0" prefWidth="831.0">
+      <ScrollPane layoutX="52.0" layoutY="87.0" prefHeight="367.0" prefWidth="831.0">
          <content>
-            <VBox fx:id="vboxMsg" prefHeight="369.0" prefWidth="810.0" />
+            <VBox fx:id="vboxMsg" prefHeight="362.0" prefWidth="825.0" styleClass="background-vbox" stylesheets="@../style/Client.css" />
          </content>
       </ScrollPane>
       <TextField fx:id="txtMsg" layoutX="39.0" layoutY="484.0" prefHeight="45.0" prefWidth="707.0" promptText="Text Here..." style="-fx-background-radius: 40;">
@@ -41,7 +46,7 @@
             <Font size="16.0" />
          </font>
       </TextField>
-      <JFXButton fx:id="btnSend" buttonType="RAISED" graphicTextGap="0.0" layoutX="763.0" layoutY="486.0" onAction="#btnSendOnAction" prefHeight="45.0" prefWidth="104.0" style="-fx-background-color: white; -fx-border-color: purple;" text="Send">
+      <JFXButton fx:id="btnSend" buttonType="RAISED" graphicTextGap="0.0" layoutX="792.0" layoutY="484.0" onAction="#btnSendOnAction" prefHeight="45.0" prefWidth="104.0" style="-fx-background-color: white; -fx-border-color: purple;" text="Send">
          <graphic>
             <ImageView fitHeight="33.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -50,9 +55,14 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <ImageView fx:id="imgUpload" fitHeight="30.0" fitWidth="38.0" layoutX="690.0" layoutY="492.0" onMouseClicked="#imgUploadOnAction" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgUpload" fitHeight="30.0" fitWidth="38.0" layoutX="658.0" layoutY="494.0" onMouseClicked="#imgUploadOnAction" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/icons8-camera-50.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="emoji" fitHeight="30.0" fitWidth="38.0" layoutX="697.0" layoutY="494.0" onMouseClicked="#emojiOnAction" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/icons8-emoji-64.png" />
          </image>
       </ImageView>
    </children>

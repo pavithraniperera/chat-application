@@ -19,8 +19,6 @@ public class ServerLauncher extends Application {
                     throw new RuntimeException(e);
                 }
             }).start();
-
-
     }
     public static void main(String[] args) {
         launch(args);

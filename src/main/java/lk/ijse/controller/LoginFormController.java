@@ -9,11 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import lk.ijse.server.Server;
+import lk.ijse.bo.ChatBo;
+import lk.ijse.bo.ChatBoImpl;
+import lk.ijse.dto.UserDto;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginFormController {
+    private ChatBo chatBo = new ChatBoImpl();
     @FXML
     private JFXButton btnLogin;
 
@@ -43,10 +47,40 @@ public class LoginFormController {
             ClientFormController controller =loader.getController();
             controller.setClientName(txtUserName.getText());
             clientStage.show();
+            if(checkTheUserName()){
+                saveToDatabase(txtUserName.getText());
+            }else {
+                new Alert(Alert.AlertType.CONFIRMATION,"Check out your chats..").show();
+            }
+
             txtUserName.clear();
+
         }else {
             new Alert(Alert.AlertType.ERROR, "Please enter your name").show();
         }
+
+    }
+
+    private boolean checkTheUserName() {
+        UserDto dto = new UserDto(txtUserName.getText());
+        try {
+            return chatBo.checkTheUserName(dto);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveToDatabase(String name) {
+        UserDto dto = new UserDto(txtUserName.getText());
+        try {
+            if(chatBo.saveUserData(dto)){
+                new Alert(Alert.AlertType.CONFIRMATION,"WELCOME "+txtUserName.getText()+" to our chat!!!").show();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

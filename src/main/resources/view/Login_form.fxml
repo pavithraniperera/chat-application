@@ -2,27 +2,20 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="603.0" prefWidth="880.0" styleClass="anchor-pane-with-background" stylesheets="@../style/Login.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.controller.LoginFormController">
    <children>
-      <TextField fx:id="txtUserName" layoutX="62.0" layoutY="352.0" prefHeight="63.0" prefWidth="470.0" promptText="Username" style="-fx-background-radius: 40; -fx-border-radius: 40;" styleClass="text-field-with-gradient" stylesheets="@../style/Login.css">
+      <TextField fx:id="txtUserName" layoutX="195.0" layoutY="158.0" prefHeight="72.0" prefWidth="491.0" promptText="Username" style="-fx-background-radius: 40; -fx-border-radius: 40;" styleClass="text-field-with-gradient" stylesheets="@../style/Login.css">
          <font>
-            <Font size="28.0" />
+            <Font name="FreeSerif Bold" size="36.0" />
          </font>
       </TextField>
-      <JFXButton fx:id="btnLogin" buttonType="RAISED" layoutX="577.0" layoutY="347.0" onAction="#btnLoginOnAction" prefHeight="72.0" prefWidth="163.0" styleClass="button-with-gradient" stylesheets="@../style/Login.css" text="LOG IN">
+      <JFXButton fx:id="btnLogin" buttonType="RAISED" layoutX="311.0" layoutY="295.0" onAction="#btnLoginOnAction" prefHeight="72.0" prefWidth="259.0" styleClass="button-with-gradient" stylesheets="@../style/Login.css" text="LOG IN" textFill="#eeeaea">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="System Bold" size="21.0" />
          </font>
       </JFXButton>
-      <ImageView fitHeight="192.0" fitWidth="209.0" layoutX="322.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/log_in-removebg-preview.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

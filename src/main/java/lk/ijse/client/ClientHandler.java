@@ -7,10 +7,10 @@ import java.net.Socket;
 import java.util.List;
 
 public class ClientHandler {
-    private Socket socket;
+    private Socket socket ;
     private  List<ClientHandler> clients ;
-    private DataInputStream dataInputStream;
-    private DataOutputStream dataOutputStream;
+    private DataInputStream dataInputStream ;
+    private DataOutputStream dataOutputStream ;
     private String msg = " ";
 
     public ClientHandler(Socket socket, List<ClientHandler> clients) {

@@ -1,19 +1,18 @@
 .anchor-pane-with-background {
-    -fx-background-image: url("../images/LoginBackground.jpg"); /* Reference to the image in the resources directory */
+    -fx-background-image: url("../images/chatBackground.gif"); /* Reference to the image in the resources directory */
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
 .text-field-with-gradient {
     -fx-background-color: linear-gradient(to bottom, rgba(119, 115, 161, 0.78), rgba(146, 97, 199, 0.86),rgba(255, 196, 118, 0) );
-    -fx-opacity: 0.58;
     -fx-border-color: rgba(0, 0, 0, 0.27);
     -fx-border-width: 2px;
     -fx-text-fill: black;
 }
 .button-with-gradient {
-    -fx-background-color: linear-gradient(to bottom, rgba(128, 120, 203, 0.58), rgba(92, 121, 192, 0.86), rgba(123, 103, 173, 0.72));
-    -fx-text-fill: #090909; /* Text color for the button */
+    -fx-background-color: linear-gradient(to bottom, rgba(182, 51, 203, 0.58), rgba(194, 105, 224, 0.86), rgba(225, 65, 175, 0.72));
+    -fx-text-fill: #fdfbfb; /* Text color for the button */
     -fx-text-stroke: #F8E2A9; /* Text stroke color */
     -fx-text-stroke-width: 2px; /* Text stroke width */
     -fx-border-color: rgba(0, 0, 0, 0.27); /* Border color */

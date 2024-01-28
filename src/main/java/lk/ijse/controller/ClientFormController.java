@@ -2,11 +2,11 @@ package lk.ijse.controller;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,15 +16,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lk.ijse.bo.ChatBo;
+import lk.ijse.bo.ChatBoImpl;
+import lk.ijse.client.EmojiUtil;
+import lk.ijse.dto.MessageDto;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.List;
 
 public class ClientFormController {
 
@@ -35,13 +41,125 @@ public class ClientFormController {
     public TextField txtMsg;
     public JFXButton btnSend;
     public ImageView imgUpload;
-    public VBox vboxMsg;
+    public    VBox vboxMsg;
+    public ImageView emoji;
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    private String clientName ="";
+    private   String clientName ="";
+    private  ChatBo chatBo = new ChatBoImpl();
+    public ChoiceBox<String> emojiPicker = new ChoiceBox<>();
+    public ContextMenu emojiPickerMenu;
+
     public void initialize(){
+//        Platform.runLater(() -> {
+//            loadAllChat(clientName);
+//        });
         displayMsg();
+        System.out.println(clientName);
+      //  loadAllChat(clientName);
+
+        ObservableList<String> emojiList = EmojiUtil.getEmojiList();
+        emojiPicker.setItems(emojiList);
+        emojiPickerMenu = createEmojiPickerMenu();
+
+
+
+    }
+
+    private ContextMenu createEmojiPickerMenu() {
+        ContextMenu menu = new ContextMenu();
+        for (String emoji : EmojiUtil.getEmojiList()) {
+            MenuItem menuItem = new MenuItem(emoji);
+            menuItem.setOnAction(event -> insertEmoji(emoji));
+            menu.getItems().add(menuItem);
+        }
+        return menu;
+    }
+
+    private void insertEmoji(String emoji) {
+        txtMsg.appendText(emoji);
+    }
+
+    public  void loadAllChat(String clientName) {
+        System.out.println(clientName);
+        try {
+            List<MessageDto> dtoList = chatBo.getAllChat(clientName);
+            for (MessageDto dto : dtoList){
+                if (dto.getSenderName().equals(clientName)){
+                    loadSendMsg(dto.getMessage());
+                }else {
+                    loadReceiveTextMessage(dto.getMessage(),dto.getReciverName(),vboxMsg);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private  void loadReceiveTextMessage(String message, String reciverName, VBox vboxMsg) {
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5,5,5,10));
+
+        HBox hBoxName = new HBox();
+        hBoxName.setAlignment(Pos.CENTER_LEFT);
+        javafx.scene.text.Text textName = new Text(reciverName);
+        TextFlow textFlow = new TextFlow(textName);
+        hBoxName.getChildren().add(textFlow);
+
+        Text text = new Text(message);
+        TextFlow textFlowMsg= new TextFlow(text);
+        textFlowMsg.setStyle("-fx-background-color: #abb8c3; -fx-font-weight: bold; -fx-background-radius: 20px");
+        text.setStyle("-fx-font-size: 16");
+        textFlowMsg.setPadding(new Insets(5,10,5,10));
+        text.setFill(Color.color(0,0,0));
+        hBox.getChildren().add(textFlowMsg);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                vboxMsg.getChildren().add(hBoxName);
+                vboxMsg.getChildren().add(hBox);
+            }
+        });
+    }
+
+    private  void loadSendMsg(String message) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setPadding(new Insets(5, 5, 0, 10));
+
+        Text text = new Text(message);
+        // Example: Set font to Noto Emoji
+        text.setFont(Font.font("Noto Emoji", FontWeight.NORMAL, FontPosture.REGULAR, 16));
+
+        text.setStyle("-fx-font-size: 16");
+        TextFlow textFlow = new TextFlow(text);
+
+//              #0693e3 #37d67a #40bf75
+        textFlow.setStyle("-fx-background-color: #7164cb; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(1, 1, 1));
+
+        hBox.getChildren().add(textFlow);
+
+        HBox hBoxTime = new HBox();
+        hBoxTime.setAlignment(Pos.CENTER_RIGHT);
+        hBoxTime.setPadding(new Insets(0, 5, 5, 10));
+        String stringTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+        Text time = new Text(stringTime);
+        time.setStyle("-fx-font-size: 10");
+
+        hBoxTime.getChildren().add(time);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                vboxMsg.getChildren().add(hBox);
+                vboxMsg.getChildren().add(hBoxTime);
+            }
+        });
+
 
     }
 
@@ -51,7 +169,9 @@ public class ClientFormController {
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
             System.out.println("[Client connected]");
+
             while (socket.isConnected()){
+
                 String receivingMsg = dataInputStream.readUTF();
                 receiveMessage(receivingMsg,vboxMsg);
             }
@@ -64,15 +184,16 @@ public class ClientFormController {
     }
 
     private void receiveMessage(String receivingMsg, VBox vboxMsg) {
+
         System.out.println(receivingMsg);
+
         if (receivingMsg.startsWith("IMAGE IS MESSAGE")){
 
             receiveImageMessage(receivingMsg);
-            
+
         }else {
             receiveTextMessage(receivingMsg,vboxMsg);
         }
-        
 
     }
 
@@ -107,12 +228,15 @@ public class ClientFormController {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5,5,5,10));
+        ImageView imageView = new ImageView("/images/icons8-user-100.png");
+        imageView.setFitHeight(30);
+        imageView.setFitWidth(30);
 
         HBox hBoxName = new HBox();
         hBoxName.setAlignment(Pos.CENTER_LEFT);
         javafx.scene.text.Text textName = new Text(name);
         TextFlow textFlow = new TextFlow(textName);
-        hBoxName.getChildren().add(textFlow);
+        hBoxName.getChildren().addAll(imageView,textFlow);
 
         Text text = new Text(serverMsg);
         TextFlow textFlowMsg= new TextFlow(text);
@@ -128,7 +252,10 @@ public class ClientFormController {
                 vboxMsg.getChildren().add(hBox);
             }
         });
+
     }
+
+
 
     public void btnSendOnAction(ActionEvent actionEvent) {
         sendMsg(txtMsg.getText());
@@ -172,6 +299,11 @@ public class ClientFormController {
             dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        try {
+            chatBo.saveMessage(msgToSend,clientName);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         txtMsg.clear();
@@ -256,7 +388,7 @@ public class ClientFormController {
         HBox hBox = new HBox(imageView);
         hBox.setAlignment(Pos.CENTER_RIGHT);
         hBox.setPadding(new Insets(5, 5, 0, 10));
-       // hBox.setStyle("-fx-background-color: #7164cb; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
+       //hBox.setStyle("-fx-background-color: #7164cb; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
 
 
 
@@ -283,12 +415,14 @@ public class ClientFormController {
         HBox hBox = new HBox(imageView);
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 0, 10));
-
+        ImageView imageView2 = new ImageView("/images/icons8-user-100.png");
+        imageView2.setFitHeight(30);
+        imageView2.setFitWidth(30);
         HBox hBoxName = new HBox();
         hBoxName.setAlignment(Pos.CENTER_LEFT);
         javafx.scene.text.Text textName = new Text(name);
         TextFlow textFlow = new TextFlow(textName);
-        hBoxName.getChildren().add(textFlow);
+        hBoxName.getChildren().addAll(imageView2,textFlow);
        // hBox.setStyle("-fx-background-color: #abb8c3; -fx-font-weight: bold; -fx-background-radius: 20px");
         Platform.runLater(new Runnable() {
             @Override
@@ -301,7 +435,6 @@ public class ClientFormController {
     }
 
 
-
     public String getClientName() {
         return clientName;
     }
@@ -310,4 +443,11 @@ public class ClientFormController {
        this. clientName = clientName;
         lblName.setText(clientName);
     }
+
+    public void emojiOnAction(MouseEvent mouseEvent) {
+
+     emojiPickerMenu.show(emoji,mouseEvent.getScreenX(),mouseEvent.getScreenY());
+    }
 }
+
+
